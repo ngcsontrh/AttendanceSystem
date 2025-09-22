@@ -21,6 +21,12 @@ namespace RAttendanceSystem.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             modelBuilder.HasDefaultSchema("app");
+            modelBuilder.Entity<Employee>().ToTable("employee");
+            modelBuilder.Entity<SystemNotification>().ToTable("system_notification");
+            modelBuilder.Entity<Department>().ToTable("department");
+            modelBuilder.Entity<Title>().ToTable("title");
+
+            base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Employee> Employees { get; set; }
