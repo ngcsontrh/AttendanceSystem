@@ -8,7 +8,7 @@ namespace RAttendanceSystem.Infrastructure.Repositories
 {
     internal abstract class RepositoryBase<TEntity> : IRepositoryBase<TEntity> where TEntity : class
     {
-        private readonly RAttendanceDbContext _context;
+        protected readonly RAttendanceDbContext _context;
 
         protected RepositoryBase(RAttendanceDbContext context)
         {
@@ -41,8 +41,9 @@ namespace RAttendanceSystem.Infrastructure.Repositories
             return records;
         }
 
-        public async Task<(IReadOnlyList<TEntity>, int)> GetPageAsync(IQueryable<TEntity> queryable, Expression<Func<TEntity, object>> orderBy, SortDirection sortDirection = SortDirection.Asc, int limit = 0, int offset = 10)
+        public async Task<(IReadOnlyList<TEntity>, int)> GetPageAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> orderBy, SortDirection sortDirection = SortDirection.Asc, int limit = 0, int offset = 10)
         {
+            var queryable = _context.Set<TEntity>().Where(predicate);
             var totalRecords = queryable.Count();
             if (sortDirection == SortDirection.Asc)
             {
@@ -56,10 +57,26 @@ namespace RAttendanceSystem.Infrastructure.Repositories
             return (records, totalRecords);
         }
 
-        public Task<(IReadOnlyList<TEntity>, int)> GetPageAsync(Expression<Func<TEntity, bool>> predicate, Expression<Func<TEntity, object>> orderBy, SortDirection sortDirection = SortDirection.Asc, int limit = 0, int offset = 10)
+        public async Task<(IReadOnlyList<TEntity>, int)> GetPageAsync(ISpecification<TEntity> specification)
         {
+            var predicate = specification.Criteria;
             var queryable = _context.Set<TEntity>().Where(predicate);
-            return GetPageAsync(queryable, orderBy, sortDirection, limit, offset);
+            var totalRecords = await queryable.CountAsync();
+
+            if (specification.OrderBy != null)
+            {
+                queryable = queryable.OrderBy(specification.OrderBy);
+            }
+            else if (specification.OrderByDescending != null)
+            {
+                queryable = queryable.OrderByDescending(specification.OrderByDescending);
+            }
+            if (specification.IsPagingEnabled && specification.Skip.HasValue && specification.Take.HasValue)
+            {
+                queryable = queryable.Skip(specification.Skip.Value).Take(specification.Take.Value);
+            }
+            var records = await queryable.ToListAsync();
+            return (records, totalRecords);
         }
 
         public IQueryable<TEntity> GetQueryable() => _context.Set<TEntity>();
@@ -89,6 +106,6 @@ namespace RAttendanceSystem.Infrastructure.Repositories
         public void UpdateRange(IEnumerable<TEntity> entities)
         {
             _context.Set<TEntity>().UpdateRange(entities);
-        }
+        }        
     }
 }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,16 +19,12 @@ namespace RAttendanceSystem.Domain.Repositories
         Task<TEntity?> GetRecordAsync(Guid id);
         Task<TEntity?> GetRecordAsync(Expression<Func<TEntity, bool>> predicate);
         Task<IReadOnlyList<TEntity>> GetListAsync(Expression<Func<TEntity, bool>> predicate);
-        Task<(IReadOnlyList<TEntity>, int)> GetPageAsync(IQueryable<TEntity> queryable,
-            Expression<Func<TEntity, object>> orderBy,
-            SortDirection sortDirection = SortDirection.Asc,
-            int limit = 0,
-            int offset = 10);
         Task<(IReadOnlyList<TEntity>, int)> GetPageAsync(Expression<Func<TEntity, bool>> predicate,
             Expression<Func<TEntity, object>> orderBy,
             SortDirection sortDirection = SortDirection.Asc,
             int limit = 0,
             int offset = 10);
+        Task<(IReadOnlyList<TEntity>, int)> GetPageAsync(ISpecification<TEntity> specification);
         Task<int> SaveChangesAsync();
     }
 
