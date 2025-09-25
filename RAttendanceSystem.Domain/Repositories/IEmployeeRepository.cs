@@ -8,5 +8,6 @@ namespace RAttendanceSystem.Domain.Repositories
 {
     public interface IEmployeeRepository : IRepositoryBase<Employee>
     {
+        Task<IReadOnlyList<Employee>> GetListBasicInfoAsync();
     }
 }

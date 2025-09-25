@@ -1,0 +1,39 @@
+services:
+  rattendancesystem.api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: ${RAS_ASPNETCORE_ENVIRONMENT}
+      ASPNETCORE_HTTP_PORTS: ${RAS_ASPNETCORE_HTTP_PORTS}
+      ASPNETCORE_HTTPS_PORTS: ${RAS_ASPNETCORE_HTTPS_PORTS}
+
+      ConnectionStrings__DefaultConnection: ${RAS_ConnectionStrings__DefaultConnection}
+
+      Authentication__Authorities__0: ${RAS_Authentication__Authorities__0}
+      Authentication__Authorities__1: ${RAS_Authentication__Authorities__1}
+      Authentication__Audiences__0: ${RAS_Authentication__Audiences__0}
+      Authentication__Audiences__1: ${RAS_Authentication__Audiences__1}
+
+      Keycloak__Domain: ${RAS_Keycloak__Domain}
+      Keycloak__Realm: ${RAS_Keycloak__Realm}
+      Keycloak__ClientId: ${RAS_Keycloak__ClientId}
+      Keycloak__ClientUuid: ${RAS_Keycloak__ClientUuid}
+      Keycloak__ClientSecret: ${RAS_Keycloak__ClientSecret}
+    ports:
+    - "8081:8081"
+    - "8082:8082"
+    volumes:
+      - ${APPDATA}/Microsoft/UserSecrets:/home/app/.microsoft/usersecrets:ro
+      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
+      - ${APPDATA}/ASP.NET/Https:/home/app/.aspnet/https:ro
+      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+
+  keycloak:
+    environment:
+      KC_DB: ${KC_DB}
+      KC_DB_URL: ${KC_DB_URL}
+      KC_DB_USERNAME: ${KC_DB_USERNAME}
+      KC_DB_PASSWORD: ${KC_DB_PASSWORD}
+      KC_DB_SCHEMA: ${KC_DB_SCHEMA}
+      KC_BOOTSTRAP_ADMIN_USERNAME: ${KC_BOOTSTRAP_ADMIN_USERNAME}
+      KC_BOOTSTRAP_ADMIN_PASSWORD: ${KC_BOOTSTRAP_ADMIN_PASSWORD}
+    ports:
+      - "8080:8080"

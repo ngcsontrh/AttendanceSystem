@@ -11,5 +11,19 @@ namespace RAttendanceSystem.Infrastructure.Repositories
         public EmployeeRepository(RAttendanceDbContext context) : base(context)
         {
         }
+
+        public async Task<IReadOnlyList<Employee>> GetListBasicInfoAsync()
+        {
+            var result = await _context.Employees
+                .Select(e => new Employee
+                {
+                    Id = e.Id,
+                    FullName = e.FullName,
+                    Code = e.Code
+                })
+                .AsNoTracking()
+                .ToListAsync();
+            return result;
+        }
     }
 }

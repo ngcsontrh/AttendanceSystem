@@ -25,11 +25,17 @@ namespace RAttendanceSystem.Infrastructure.Data
             modelBuilder.Entity<SystemNotification>().ToTable("system_notification");
             modelBuilder.Entity<Department>().ToTable("department");
             modelBuilder.Entity<Title>().ToTable("title");
+            modelBuilder.Entity<AttendanceWiFi>().ToTable("attendance_wifi");
+            modelBuilder.Entity<AttendanceHistory>().ToTable("attendance_history");
 
             base.OnModelCreating(modelBuilder);
         }
 
         public DbSet<Employee> Employees { get; set; }
         public DbSet<SystemNotification> SystemNotifications { get; set; }
-    }
+        public DbSet<Department> Departments { get; set; }
+        public DbSet<Title> Titles { get; set; }
+        public DbSet<AttendanceWiFi> AttendanceWiFis { get; set; }
+        public DbSet<AttendanceHistory> AttendanceHistories { get; set; }
+        }
 }

@@ -24,6 +24,8 @@ namespace RAttendanceSystem.Domain.Repositories
             SortDirection sortDirection = SortDirection.Asc,
             int limit = 0,
             int offset = 10);
+        Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate);
+        Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate);
         Task<(IReadOnlyList<TEntity>, int)> GetPageAsync(ISpecification<TEntity> specification);
         Task<int> SaveChangesAsync();
     }

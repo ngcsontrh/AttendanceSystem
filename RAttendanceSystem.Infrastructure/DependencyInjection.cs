@@ -1,5 +1,9 @@
 ﻿using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using RAttendanceSystem.Application.Services;
+using RAttendanceSystem.Identity.Implements;
+using RAttendanceSystem.Infrastructure.Services;
+using StackExchange.Redis;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,7 +21,7 @@ namespace RAttendanceSystem.Infrastructure
 
             services.AddDbContext<RAttendanceDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
-            
+
             var repositories = assembly.GetTypes()
                 .Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Repository"))
                 .ToList();
@@ -29,6 +33,22 @@ namespace RAttendanceSystem.Infrastructure
                     services.AddScoped(interfaceType, repo);
                 }
             }
+
+            services.Configure<KeycloakOptions>(
+                configuration.GetSection(KeycloakOptions.SectionName));
+
+            services.AddHttpClient<IIdentityService, IdentityService>();
+
+            services.AddScoped<IIdentityService, IdentityService>();
+
+            services.AddMemoryCache();
+            services.AddSingleton<ICacheService, MemoryCacheService>();
+
+            //services.AddSingleton<IConnectionMultiplexer>(sp =>
+            //{
+            //    return ConnectionMultiplexer.Connect(configuration.GetConnectionString("Redis")!);
+            //});
+            //services.AddSingleton<ICacheService, RedisCacheService>();
         }
     }
 }

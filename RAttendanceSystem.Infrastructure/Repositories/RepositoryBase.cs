@@ -25,6 +25,18 @@ namespace RAttendanceSystem.Infrastructure.Repositories
             _context.Set<TEntity>().AddRange(entities);
         }
 
+        public async Task<bool> AnyAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            var exists = await _context.Set<TEntity>().AnyAsync(predicate);
+            return exists;
+        }
+
+        public async Task<int> CountAsync(Expression<Func<TEntity, bool>> predicate)
+        {
+            var count = await _context.Set<TEntity>().CountAsync(predicate);
+            return count;
+        }
+
         public void Delete(TEntity entity)
         {
             _context.Set<TEntity>().Remove(entity);

@@ -10,9 +10,12 @@ namespace RAttendanceSystem.Application.UseCases.EmployeeUC.Commands
     public record CreateEmployeeCommand(
         string FullName,
         string Code,
+        string Email,
         Gender? Gender = null,
         DateTime? BirthDate = null,
         Guid? DepartmentId = null,
         Guid? TitleId = null
-    );    
+    );
+
+    public record CreateEmployeeResponse(Guid Id);
 }

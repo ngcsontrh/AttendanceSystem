@@ -11,7 +11,7 @@ namespace RAttendanceSystem.Domain.Entities
         public Guid Id { get; set; }
         public Guid ReceiverId { get; set; }
         public string Title { get; set; } = null!;
-        public string? Message { get; set; }
+        public string? Content { get; set; }
         public DateTime CreatedAt { get; set; }
 
         public Employee Receiver { get; set; } = null!;

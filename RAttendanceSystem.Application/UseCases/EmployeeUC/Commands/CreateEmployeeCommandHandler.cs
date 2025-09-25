@@ -1,4 +1,7 @@
-﻿using System;
+﻿using RAttendanceSystem.Application.Services;
+using RAttendanceSystem.Domain;
+using RAttendanceSystem.Domain.Entities;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -9,40 +12,66 @@ namespace RAttendanceSystem.Application.UseCases.EmployeeUC.Commands
     public class CreateEmployeeCommandHandler
     {
         private readonly IEmployeeRepository _employeeRepository;
+        private readonly IIdentityService _identityService;
         private readonly ILogger<CreateEmployeeCommandHandler> _logger;
 
         public CreateEmployeeCommandHandler(IEmployeeRepository employeeRepository,
+            IIdentityService identityService,
             ILogger<CreateEmployeeCommandHandler> logger)
         {
             _employeeRepository = employeeRepository;
+            _identityService = identityService;
             _logger = logger;
         }
 
-        public async Task<Guid> HandleAsync(CreateEmployeeCommand model)
+        public async Task<CreateEmployeeResponse> HandleAsync(CreateEmployeeCommand model)
         {
             try
             {
-                var entity = new Employee
+                var isExist = await _employeeRepository.AnyAsync(x => x.Code == model.Code);
+                if (isExist)
                 {
-                    Id = Guid.CreateVersion7(),
-                    BirthDate = model.BirthDate,
-                    Code = model.Code,
-                    TitleId = model.TitleId,
-                    DepartmentId = model.DepartmentId,
-                    CreatedAt = DateTime.UtcNow,
-                    FullName = model.FullName,
-                    Gender = model.Gender,
-                };
+                    throw new Exception("Employee code already exists");
+                }
+                var entity = new Employee { Id = Guid.CreateVersion7() };
+                var createIdentityUserResult = await _identityService.CreateUserAsync(new CreateUserRequest
+                {
+                    Username = model.Code,
+                    Email = model.Email,
+                    Password = AppConstraint.DefaultPassword,
+                    EmployeeId = entity.Id.ToString()
+                });
+                if (!createIdentityUserResult.Succeeded)
+                {
+                    throw new Exception(createIdentityUserResult.Errors.FirstOrDefault() ?? "Failed to create user in identity service");
+                }
+                entity.KeycloakId = createIdentityUserResult.UserId;
+                MapToEntity(entity, model);
+
                 _employeeRepository.Add(entity);
                 await _employeeRepository.SaveChangesAsync();
-                _logger.LogInformation("Employee {EmployeeId} is created.", entity.Id);
-                return entity.Id;
+
+                _logger.LogInformation("Employee {EmployeeId} is created", entity.Id);
+
+                return new CreateEmployeeResponse(entity.Id);
             }
             catch (Exception ex)
             {
-                _logger.LogError(ex, "Error occurred while creating employee.");
+                _logger.LogError(ex, "Error occurred while creating employee");
                 throw;
             }
+        }
+
+        private void MapToEntity(Employee entity, CreateEmployeeCommand model)
+        {
+            entity.BirthDate = model.BirthDate;
+            entity.Code = model.Code;
+            entity.Email = model.Email;
+            entity.TitleId = model.TitleId;
+            entity.DepartmentId = model.DepartmentId;
+            entity.CreatedAt = DateTime.UtcNow;
+            entity.FullName = model.FullName;
+            entity.Gender = model.Gender;
         }
     }
 }

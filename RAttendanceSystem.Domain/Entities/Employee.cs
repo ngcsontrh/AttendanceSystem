@@ -9,7 +9,9 @@ namespace RAttendanceSystem.Domain.Entities
     public class Employee
     {
         public Guid Id { get; set; }
+        public string? KeycloakId { get; set; }
         public string Code { get; set; } = null!;
+        public string Email { get; set; } = null!;
         public string FullName { get; set; } = null!;
         public Gender? Gender { get; set; }
         public DateTime? BirthDate { get; set; }

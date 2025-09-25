@@ -15,14 +15,14 @@ builder.Services.AddAuthentication()
         var jwksUri = $"{builder.Configuration["Keycloak:Domain"]}/realms/{builder.Configuration["Keycloak:Realm"]}/protocol/openid-connect/certs";
         options.TokenValidationParameters = new TokenValidationParameters
         {
-            RoleClaimType = "roles",
+            RoleClaimType = "realm_access.roles",
             NameClaimType = "preferred_username",
             ValidateIssuer = true,
             ValidateAudience = true,
             ValidateLifetime = true,
             ValidateIssuerSigningKey = true,
             ValidIssuers = builder.Configuration.GetSection("Authentication:Authorities").Get<string[]>(),
-            ValidAudience = builder.Configuration["Authentication:Audience"],
+            ValidAudiences = builder.Configuration.GetSection("Authentication:Audiences").Get<string[]>(),
             IssuerSigningKeyResolver = (token, securityToken, kid, parameters) =>
             {
                 using var client = new HttpClient();
@@ -46,5 +46,10 @@ app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
 app.MapEmployeeEndpoints();
+app.MapDepartmentEndpoints();
+app.MapTitleEndpoints();
+app.MapSystemNotificationEndpoints();
+app.MapAttendanceWiFiEndpoints();
+app.MapAttendanceEndpoints();
 
 app.Run();
