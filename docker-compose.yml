@@ -1,6 +1,6 @@
 ﻿services:
   rattendancesystem.api:
-    image: ${DOCKER_REGISTRY-}rattendancesystemapi
+    image: ${DOCKER_REGISTRY-}r_attendance_system_api
     build:
       context: .
       dockerfile: RAttendanceSystem.Api/Dockerfile    

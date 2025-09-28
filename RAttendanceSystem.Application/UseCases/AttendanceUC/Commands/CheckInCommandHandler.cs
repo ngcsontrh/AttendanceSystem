@@ -36,17 +36,17 @@ namespace RAttendanceSystem.Application.UseCases.AttendanceUC.Commands
 
                 var existingAttendance = await _attendanceHistoryRepository.GetRecordAsync(x => 
                     x.EmployeeId == command.EmployeeId && 
-                    x.CheckInTime.Date == DateTime.UtcNow.Date);
+                    x.CheckInTime.Date == DateTime.Now.Date);
                 if (existingAttendance != null)
                 {
                     throw new InvalidOperationException("Already checked in today.");
                 }
                 
-                var checkInTime = DateTime.UtcNow;
+                var checkInTime = DateTime.Now;
                 var checkInStatus = checkInTime switch
                 {
-                    var t when t < allowedWiFi.ValidCheckInTime => AttendanceStatus.Early,
-                    var t when t == allowedWiFi.ValidCheckInTime => AttendanceStatus.OnTime,
+                    var t when TimeOnly.FromDateTime(t) < allowedWiFi.ValidCheckInTime => AttendanceStatus.Early,
+                    var t when TimeOnly.FromDateTime(t) == allowedWiFi.ValidCheckInTime => AttendanceStatus.OnTime,
                     _ => AttendanceStatus.Late
                 };
                 var attendance = new AttendanceHistory
@@ -55,7 +55,7 @@ namespace RAttendanceSystem.Application.UseCases.AttendanceUC.Commands
                     EmployeeId = command.EmployeeId,
                     CheckInTime = checkInTime,
                     CheckInStatus = checkInStatus,
-                    CreatedAt = DateTime.UtcNow,
+                    CreatedAt = DateTime.Now,
                 };
                 _attendanceHistoryRepository.Add(attendance);
                 await _attendanceHistoryRepository.SaveChangesAsync();

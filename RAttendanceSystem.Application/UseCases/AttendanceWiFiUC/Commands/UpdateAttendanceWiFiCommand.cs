@@ -11,6 +11,8 @@ namespace RAttendanceSystem.Application.UseCases.AttendanceWiFiUC.Commands
         string Location,
         string SSID,
         string BSSID,
+        TimeOnly ValidCheckInTime,
+        TimeOnly ValidCheckOutTime,
         string? Description = null
     );
 }

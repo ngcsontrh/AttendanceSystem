@@ -31,6 +31,8 @@ namespace RAttendanceSystem.Application.UseCases.AttendanceWiFiUC.Queries
                 x.Location,
                 x.SSID,
                 x.BSSID,
+                x.ValidCheckInTime,
+                x.ValidCheckOutTime,
                 x.Description)).ToList();
             return new GetListAttendanceWiFiResponse(data);
         }

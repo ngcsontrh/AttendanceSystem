@@ -39,6 +39,8 @@ namespace RAttendanceSystem.Application.UseCases.AttendanceWiFiUC.Queries
                 attendanceWiFi.Location,
                 attendanceWiFi.SSID,
                 attendanceWiFi.BSSID,
+                attendanceWiFi.ValidCheckInTime,
+                attendanceWiFi.ValidCheckOutTime,
                 attendanceWiFi.Description,
                 attendanceWiFi.CreatedAt
             );

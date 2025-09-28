@@ -69,7 +69,7 @@ namespace RAttendanceSystem.Application.UseCases.EmployeeUC.Commands
             entity.Email = model.Email;
             entity.TitleId = model.TitleId;
             entity.DepartmentId = model.DepartmentId;
-            entity.CreatedAt = DateTime.UtcNow;
+            entity.CreatedAt = DateTime.Now;
             entity.FullName = model.FullName;
             entity.Gender = model.Gender;
         }

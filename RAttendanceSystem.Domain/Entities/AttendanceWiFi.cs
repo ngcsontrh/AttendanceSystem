@@ -12,8 +12,8 @@ namespace RAttendanceSystem.Domain.Entities
         public string Location { get; set; } = null!;
         public string SSID { get; set; } = null!;
         public string BSSID { get; set; } = null!;
-        public DateTime ValidCheckInTime { get; set; }
-        public DateTime ValidCheckOutTime { get; set; }
+        public TimeOnly ValidCheckInTime { get; set; }
+        public TimeOnly ValidCheckOutTime { get; set; }
         public string? Description { get; set; }
         public DateTime CreatedAt { get; set; }
     }

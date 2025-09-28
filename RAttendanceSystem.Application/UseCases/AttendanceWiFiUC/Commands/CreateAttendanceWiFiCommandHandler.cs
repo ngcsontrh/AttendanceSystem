@@ -24,8 +24,10 @@ namespace RAttendanceSystem.Application.UseCases.AttendanceWiFiUC.Commands
                     Location = command.Location,
                     SSID = command.SSID,
                     BSSID = command.BSSID,
+                    ValidCheckInTime = command.ValidCheckInTime,
+                    ValidCheckOutTime = command.ValidCheckOutTime,
                     Description = command.Description,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now
                 };
                 _attendanceWiFiRepository.Add(newAttendanceWiFi);
                 await _attendanceWiFiRepository.SaveChangesAsync();

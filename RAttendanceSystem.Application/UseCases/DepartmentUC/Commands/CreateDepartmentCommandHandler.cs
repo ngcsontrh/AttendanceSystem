@@ -26,7 +26,7 @@ namespace RAttendanceSystem.Application.UseCases.DepartmentUC.Commands
                     Id = Guid.CreateVersion7(),
                     Name = command.Name,
                     Description = command.Description,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now
                 };
                 _departmentRepository.Add(newDepartment);
                 await _departmentRepository.SaveChangesAsync();

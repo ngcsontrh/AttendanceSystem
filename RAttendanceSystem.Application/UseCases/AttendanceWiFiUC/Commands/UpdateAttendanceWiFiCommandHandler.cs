@@ -41,6 +41,8 @@ namespace RAttendanceSystem.Application.UseCases.AttendanceWiFiUC.Commands
             entity.SSID = command.SSID;
             entity.BSSID = command.BSSID;
             entity.Description = command.Description;
+            entity.ValidCheckInTime = command.ValidCheckInTime;
+            entity.ValidCheckOutTime = command.ValidCheckOutTime;
         }
     }
 }

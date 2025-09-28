@@ -231,7 +231,7 @@ namespace RAttendanceSystem.Identity.Implements
         #region Get Access Token
         private async Task<string> GetAccessTokenAsync()
         {
-            if (!string.IsNullOrEmpty(_accessToken) && DateTime.UtcNow < _tokenExpirationTime)
+            if (!string.IsNullOrEmpty(_accessToken) && DateTime.Now < _tokenExpirationTime)
             {
                 return _accessToken;
             }
@@ -258,7 +258,7 @@ namespace RAttendanceSystem.Identity.Implements
                     if (tokenResponse != null && !string.IsNullOrEmpty(tokenResponse.AccessToken))
                     {
                         _accessToken = tokenResponse.AccessToken;
-                        _tokenExpirationTime = DateTime.UtcNow.AddSeconds(tokenResponse.ExpiresIn - 30);
+                        _tokenExpirationTime = DateTime.Now.AddSeconds(tokenResponse.ExpiresIn - 30);
                         return _accessToken;
                     }
                 }

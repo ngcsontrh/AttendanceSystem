@@ -26,7 +26,7 @@ namespace RAttendanceSystem.Application.UseCases.TitleUC.Commands
                     Id = Guid.CreateVersion7(),
                     Name = command.Name,
                     Description = command.Description,
-                    CreatedAt = DateTime.UtcNow
+                    CreatedAt = DateTime.Now
                 };
                 _titleRepository.Add(newTitle);
                 await _titleRepository.SaveChangesAsync();

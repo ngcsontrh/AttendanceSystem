@@ -22,6 +22,8 @@ namespace RAttendanceSystem.Infrastructure
             services.AddDbContext<RAttendanceDbContext>(options =>
                 options.UseNpgsql(configuration.GetConnectionString("DefaultConnection")));
 
+            AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
             var repositories = assembly.GetTypes()
                 .Where(t => t.IsClass && !t.IsAbstract && t.Name.EndsWith("Repository"))
                 .ToList();

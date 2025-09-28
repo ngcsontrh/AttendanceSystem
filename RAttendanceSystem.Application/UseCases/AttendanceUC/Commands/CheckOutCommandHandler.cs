@@ -36,17 +36,17 @@ namespace RAttendanceSystem.Application.UseCases.AttendanceUC.Commands
 
                 var attendance = await _attendanceHistoryRepository.GetRecordAsync(x =>
                     x.EmployeeId == command.EmployeeId &&
-                    x.CheckInTime.Date == DateTime.UtcNow.Date);
+                    x.CheckInTime.Date == DateTime.Now.Date);
                 if (attendance == null)
                 {
                     throw new InvalidOperationException("No check-in record found for today.");
                 }
 
-                var checkOutTime = DateTime.UtcNow;
+                var checkOutTime = DateTime.Now;
                 var checkOutStatus = checkOutTime switch
                 {
-                    var t when t < allowedWiFi.ValidCheckOutTime => AttendanceStatus.Early,
-                    var t when t == allowedWiFi.ValidCheckOutTime => AttendanceStatus.OnTime,
+                    var t when TimeOnly.FromDateTime(t) < allowedWiFi.ValidCheckOutTime => AttendanceStatus.Early,
+                    var t when TimeOnly.FromDateTime(t) == allowedWiFi.ValidCheckOutTime => AttendanceStatus.OnTime,
                     _ => AttendanceStatus.Late
                 };
 
