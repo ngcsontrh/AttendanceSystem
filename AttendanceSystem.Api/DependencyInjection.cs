@@ -1,6 +1,7 @@
 ﻿using AttendanceSystem.Api.Commons;
 using AttendanceSystem.Application.Commons;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.DataProtection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 
@@ -87,6 +88,21 @@ public static class DependencyInjection
             {
                 policy.RequireRole(AppConstraint.AdminRole);
             });
+        return services;
+    }
+
+    public static IServiceCollection AddDataProtectionConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+        var dpSettings = configuration.GetSection("DataProtectionSettings") ?? throw new InvalidOperationException("Data Protection Settings not configured");
+        var applicationName = dpSettings["ApplicationName"] ?? throw new InvalidOperationException("Data Protection Application Name not configured");
+        var keyStoragePath = dpSettings["KeyStoragePath"] ?? throw new InvalidOperationException("Data Protection Key Storage Path not configured");
+        var builder = services.AddDataProtection()
+            .SetApplicationName(applicationName);
+        
+        if (!string.IsNullOrWhiteSpace(keyStoragePath))
+        {
+            builder.PersistKeysToFileSystem(new DirectoryInfo(keyStoragePath));
+        }
         return services;
     }
 

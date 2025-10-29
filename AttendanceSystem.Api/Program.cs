@@ -32,6 +32,8 @@ builder.Services.AddCorsPolicies();
 
 builder.Services.AddAuthorizationPolicies();
 
+builder.Services.AddDataProtectionConfiguration(builder.Configuration);
+
 var app = builder.Build();
 
 app.UseCorsPolicies();
