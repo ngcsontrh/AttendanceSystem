@@ -7,6 +7,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Serilog;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -29,6 +30,7 @@ public static class DependencyInjection
         services.AddRepositories();
         services.AddServices();
         services.AddHttpServices();
+        services.AddLoggerConfiguration(configuration);
         return services;
     }
 
@@ -38,6 +40,24 @@ public static class DependencyInjection
         {
             options.UseSqlServer(configuration.GetConnectionString("DefaultConnection"));
         });
+        return services;
+    }
+
+    private static IServiceCollection AddLoggerConfiguration(this IServiceCollection services, IConfiguration configuration)
+    {
+        var seqServerUrl = configuration.GetValue<string>("Seq:ServerUrl") ?? throw new InvalidOperationException("Seq Server URL not configured");
+        var seqApiKey = configuration.GetValue<string>("Seq:ApiKey") ?? throw new InvalidOperationException("Seq API Key not configured");
+        Log.Logger = new LoggerConfiguration()
+            .ReadFrom.Configuration(configuration)
+            .Enrich.WithThreadId()
+            .Enrich.WithEnvironmentName()
+            .Enrich.FromLogContext()
+            .WriteTo.Console()
+            .WriteTo.Seq(serverUrl: seqServerUrl, apiKey: seqApiKey)
+            .CreateLogger();
+
+        services.AddSerilog();
+
         return services;
     }
 
