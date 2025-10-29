@@ -42,11 +42,9 @@ app.MapDefaultEndpoints();
 
 app.MapEndpointDefinitions();
 
-if (app.Environment.IsDevelopment())
-{
-    app.MapOpenApi();
-    app.ApplyMigrations();
-}
+app.MapOpenApi();
+
+app.ApplyMigrations();
 
 app.UseAuthentication();
 

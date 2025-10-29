@@ -4,11 +4,10 @@ builder.AddDockerComposeEnvironment("env");
 
 var sqlPassword = builder.AddParameter("SQLPassword", true);
 
-var sqlServer = builder.AddSqlServer("SQLServer", sqlPassword, 1433)
+var db = builder.AddSqlServer("SQLServer", sqlPassword, 1433)
     .WithDataVolume()
-    .WithLifetime(ContainerLifetime.Persistent);
-
-var db = sqlServer.AddDatabase("AttendanceSystem");
+    .WithLifetime(ContainerLifetime.Persistent)
+    .AddDatabase("AttendanceSystem");
 
 builder.AddProject<Projects.AttendanceSystem_Api>("AttendanceSystem-Api")
     .WithReference(db)
