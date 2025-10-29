@@ -1,5 +1,7 @@
 var builder = DistributedApplication.CreateBuilder(args);
 
+builder.AddDockerComposeEnvironment("env");
+
 var sqlPassword = builder.AddParameter("SQLPassword", true);
 
 var sqlServer = builder.AddSqlServer("SQLServer", sqlPassword, 1433)
