@@ -14,7 +14,6 @@ var db = builder.AddSqlServer("SQLServer", sqlPassword, 1433)
     .AddDatabase("AttendanceSystem");
 
 var seq = builder.AddSeq("Seq", 5341)
-    .ExcludeFromManifest()
     .WithDataVolume()
     .WithEnvironment("ACCEPT_EULA", "Y")
     .WithEnvironment("SEQ_FIRST_RUN_ADMIN_PASSWORD", seqApiKey)
