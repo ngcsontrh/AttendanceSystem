@@ -17,12 +17,10 @@ namespace AttendanceSystem.Infrastructure.Services;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly IConfiguration _configuration;
 
-    public IdentityService(UserManager<AppUser> userManager, IConfiguration configuration)
+    public IdentityService(UserManager<AppUser> userManager)
     {
         _userManager = userManager;
-        _configuration = configuration;
     }
 
     public async Task<bool> VerifyUserAsync(AppUser user, string password)
@@ -100,6 +98,12 @@ public class IdentityService : IIdentityService
     {
         var roles = await _userManager.GetRolesAsync(user);
         return roles.Count > 0 ? roles.First() : null;
+    }
+
+    public async Task<AppUser?> GetUserByIdAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        return user;
     }
 }
 

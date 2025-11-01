@@ -1,9 +1,11 @@
-using Microsoft.AspNetCore.Mvc;
-using AttendanceSystem.Application.Commons.Models;
 using AttendanceSystem.Api.Commons;
 using AttendanceSystem.Application.Commons;
 using AttendanceSystem.Application.Commons.Errors;
+using AttendanceSystem.Application.Commons.Models;
 using AttendanceSystem.Application.Features.User.Command;
+using AttendanceSystem.Application.Features.User.Queries;
+using Microsoft.AspNetCore.Mvc;
+using System.Security.Claims;
 
 namespace AttendanceSystem.Api.Endpoints;
 
@@ -71,5 +73,33 @@ public class UserEndpoints : IEndpointRegister
             });
         })
             .RequireAuthorization(AppConstraint.AdminPolicy);
+
+        group.MapGet("/me", async (
+            HttpContext httpContext,
+            [FromServices] GetCurrentUserQueryHandler handler
+            ) =>
+        {
+            var userId = httpContext.User?.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+            if (userId == null || !Guid.TryParse(userId, out var guid))
+            {
+                return Results.Unauthorized();
+            }
+            var result = await handler.ExecuteAsync(new GetCurrentUserQuery(guid));
+            if (result.IsSuccess)
+            {
+                return Results.Ok(result.Value);
+            }
+            if (result.HasError<NotFoundError>())
+            {
+                return Results.NotFound(new ErrorData
+                {
+                    Message = result.Errors.First().Message
+                });
+            }
+            return Results.InternalServerError(new ErrorData
+            {
+                Message = result.Errors.First().Message
+            });
+        }).RequireAuthorization(AppConstraint.StaffPolicy);
     }
 }

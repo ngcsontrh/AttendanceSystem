@@ -12,6 +12,7 @@ namespace AttendanceSystem.Application.Commons.Services;
 /// </summary>
 public interface IIdentityService
 {
+    Task<AppUser?> GetUserByIdAsync(Guid userId);
     Task<bool> VerifyUserAsync(AppUser user, string password);
     Task<AppUser?> GetUserByNameAsync(string username);
     Task<string?> GetRoleByUserAsync(AppUser user);
