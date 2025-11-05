@@ -1,13 +1,22 @@
 ﻿using AttendanceSystem.ServiceDefaults;
 using AttendanceSystem.Worker.Mail;
+using AttendanceSystem.Worker.Mail.Configs;
 using AttendanceSystem.Worker.Mail.Consumers;
 using MassTransit;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Options;
 
 var builder = Host.CreateApplicationBuilder(args);
 var configuration = builder.Configuration;
 
 builder.AddServiceDefaults();
+
+builder.Services.Configure<EmailSettings>(configuration.GetSection("EmailSettings"));
+
+builder.Services.AddSingleton(resolver =>
+    resolver.GetRequiredService<IOptions<EmailSettings>>().Value
+);
+
 builder.Services.AddMassTransit(x =>
 {
     x.UsingRabbitMq((context, cfg) =>

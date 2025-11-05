@@ -8,6 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MailKit" Version="4.14.1" />
     <PackageReference Include="MassTransit" Version="8.5.5" />
     <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.5" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
@@ -16,5 +17,11 @@
   <ItemGroup>
     <ProjectReference Include="..\AttendanceSystem.Domain\AttendanceSystem.Domain.csproj" />
     <ProjectReference Include="..\AttendanceSystem.ServiceDefaults\AttendanceSystem.ServiceDefaults.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\WelcomeMailTemplate.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 </Project>
