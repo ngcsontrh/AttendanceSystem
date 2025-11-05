@@ -17,12 +17,14 @@ namespace AttendanceSystem.Infrastructure.Services;
 public class IdentityService : IIdentityService
 {
     private readonly UserManager<AppUser> _userManager;
-    private readonly IConfiguration _configuration;
+    private readonly IRoleStore<AppRole> _roleStore;
+    private readonly IUserStore<AppUser> _userStore;
 
-    public IdentityService(UserManager<AppUser> userManager, IConfiguration configuration)
+    public IdentityService(UserManager<AppUser> userManager, IRoleStore<AppRole> roleStore, IUserStore<AppUser> userStore)
     {
         _userManager = userManager;
-        _configuration = configuration;
+        _roleStore = roleStore;
+        _userStore = userStore;
     }
 
     public async Task<bool> VerifyUserAsync(AppUser user, string password)
@@ -100,6 +102,23 @@ public class IdentityService : IIdentityService
     {
         var roles = await _userManager.GetRolesAsync(user);
         return roles.Count > 0 ? roles.First() : null;
+    }
+
+    public async Task<AppUser?> GetUserByIdAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        return user;
+    }
+
+    public async Task<string?> GetRoleByUserIdAsync(Guid userId)
+    {
+        var user = await _userManager.FindByIdAsync(userId.ToString());
+        if (user == null)
+        {
+            throw new InvalidOperationException("User not found");
+        }
+        var role = await GetRoleByUserAsync(user);
+        return role;
     }
 }
 

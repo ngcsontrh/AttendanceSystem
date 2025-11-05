@@ -2,6 +2,7 @@ using Ardalis.Specification;
 using Ardalis.Specification.EntityFrameworkCore;
 using AttendanceSystem.Domain.Entities;
 using AttendanceSystem.Domain.Repositories;
+using AttendanceSystem.Domain.Specifications;
 using AttendanceSystem.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
@@ -23,5 +24,17 @@ public class AttendanceHistoryRepository : RepositoryBase<AttendanceHistory>, IA
             .AsNoTracking()
             .ToListAsync();
         return (items, totalCount);
+    }
+
+    public Task<bool> IsAlreadyCheckedInAsync(IsAlreadyCheckedInSpecification spec)
+    {
+        var query = SpecificationEvaluator.GetQuery(DbContext.Set<AttendanceHistory>(), spec);
+        return query.AnyAsync();
+    }
+
+    public Task<bool> IsAlreadyCheckedOutAsync(IsAlreadyCheckedOutSpecification spec)
+    {
+        var query = SpecificationEvaluator.GetQuery(DbContext.Set<AttendanceHistory>(), spec);
+        return query.AnyAsync();
     }
 }

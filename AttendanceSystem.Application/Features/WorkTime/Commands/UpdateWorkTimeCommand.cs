@@ -42,15 +42,6 @@ public class UpdateWorkTimeCommandHandler
                 return Result.Fail(new NotFoundError());
             }
 
-            if (command.IsActive && !entity.IsActive)
-            {
-                var activeWorkTime = await _workTimeRepository.GetActiveWorkTimeAsync();
-                if (activeWorkTime != null)
-                {
-                    return Result.Fail(new BusinessError("Đã có ca làm việc đang hoạt động. Vui lòng vô hiệu hóa ca làm việc hiện tại trước khi kích hoạt ca làm việc mới."));
-                }
-            }
-
             command.Adapt(entity);
             entity.UpdatedAt = DateTime.Now;
             entity.UpdatedById = _currentUserService.GetCurrentUserId();

@@ -7,6 +7,7 @@ public class AttendanceHistoryDTO
     public DateTime AttendanceDate { get; set; }
     public AttendanceTypeDTO Type { get; set; }
     public AttendanceStatusDTO Status { get; set; }
+    public Guid WorkTimeId { get; set; }
 }
 
 public enum AttendanceTypeDTO

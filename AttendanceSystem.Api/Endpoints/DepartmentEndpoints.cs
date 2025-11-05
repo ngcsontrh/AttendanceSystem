@@ -105,6 +105,13 @@ public class DepartmentEndpoints : IEndpointRegister
                     Message = result.Errors.First().Message
                 });
             }
+            if (result.HasError<BusinessError>())
+            {
+                return Results.BadRequest(new ErrorData
+                {
+                    Message = result.Errors.First().Message
+                });
+            }
             return Results.InternalServerError(new ErrorData
             {
                 Message = result.Errors.First().Message

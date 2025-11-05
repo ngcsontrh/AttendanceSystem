@@ -10,5 +10,5 @@ public interface IWorkTimeRepository : IRepositoryBase<WorkTime>
         int pageIndex,
         int pageSize);
 
-    Task<WorkTime?> GetActiveWorkTimeAsync();
+    Task<bool> IsWorkTimeActiveExistingAsync(Guid id);
 }

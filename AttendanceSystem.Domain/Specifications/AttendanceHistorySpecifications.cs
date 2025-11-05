@@ -25,3 +25,23 @@ public class GetPageAttendanceHistorySpecification : Specification<AttendanceHis
         Query.OrderByDescending(x => x.AttendanceDate);
     }
 }
+
+public class IsAlreadyCheckedInSpecification : Specification<AttendanceHistory>
+{
+    public IsAlreadyCheckedInSpecification(Guid employeeId, DateTime attendanceDate)
+    {
+        Query.Where(x => x.EmployeeId == employeeId &&
+                         x.AttendanceDate.Date == attendanceDate.Date &&
+                         x.Type == AttendanceType.CheckIn);
+    }
+}
+
+public class IsAlreadyCheckedOutSpecification : Specification<AttendanceHistory>
+{
+    public IsAlreadyCheckedOutSpecification(Guid employeeId, DateTime attendanceDate)
+    {
+        Query.Where(x => x.EmployeeId == employeeId &&
+                         x.AttendanceDate.Date == attendanceDate.Date &&
+                         x.Type == AttendanceType.CheckOut);
+    }
+}

@@ -1,0 +1,20 @@
+﻿<Project Sdk="Microsoft.NET.Sdk.Worker">
+
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>dotnet-AttendanceSystem.Worker.Mail-17c3b28a-6606-4347-bd35-cf43bccc7859</UserSecretsId>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <PackageReference Include="MassTransit" Version="8.5.5" />
+    <PackageReference Include="MassTransit.RabbitMQ" Version="8.5.5" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="9.0.10" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\AttendanceSystem.Domain\AttendanceSystem.Domain.csproj" />
+    <ProjectReference Include="..\AttendanceSystem.ServiceDefaults\AttendanceSystem.ServiceDefaults.csproj" />
+  </ItemGroup>
+</Project>

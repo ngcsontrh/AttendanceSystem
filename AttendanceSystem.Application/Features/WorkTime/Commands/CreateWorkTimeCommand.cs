@@ -35,15 +35,6 @@ public class CreateWorkTimeCommandHandler
     {
         try
         {
-            if (command.IsActive)
-            {
-                var activeWorkTime = await _workTimeRepository.GetActiveWorkTimeAsync();
-                if (activeWorkTime != null)
-                {
-                    return Result.Fail<WorkTimeDTO>(new BusinessError("Đã có ca làm việc đang hoạt động. Vui lòng vô hiệu hóa ca làm việc hiện tại trước khi tạo ca làm việc mới."));
-                }
-            }
-
             var entity = command.Adapt<Domain.Entities.WorkTime>();
             entity.Id = Guid.CreateVersion7();
             entity.CreatedAt = DateTime.Now;
