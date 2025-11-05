@@ -1,7 +1,9 @@
 ﻿using AttendanceSystem.Application.Commons.Services;
+using AttendanceSystem.Domain.Events.User;
 using AttendanceSystem.Domain.Identities;
 using AttendanceSystem.Infrastructure.Persistence;
 using AttendanceSystem.Infrastructure.Services;
+using MassTransit;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
@@ -31,6 +33,7 @@ public static class DependencyInjection
         services.AddServices();
         services.AddHttpServices();
         services.AddLoggerConfiguration(configuration);
+        services.AddMasstransitServices(configuration);
         return services;
     }
 
@@ -122,6 +125,36 @@ public static class DependencyInjection
     private static IServiceCollection AddHttpServices(this IServiceCollection services)
     {        
         services.AddScoped<IUserContextProvider, HttpUserContextProvider>();
+        return services;
+    }
+
+    private static IServiceCollection AddMasstransitServices(this IServiceCollection services, IConfiguration configuration)
+    {
+        services.AddMassTransit(x =>
+        {
+            x.UsingRabbitMq((context, cfg) =>
+            {
+                var host = configuration.GetValue<string>("RabbitMQ:Host") ?? throw new InvalidOperationException("RabbitMQ Host is not configured");
+                var username = configuration.GetValue<string>("RabbitMQ:Username") ?? throw new InvalidOperationException("RabbitMQ Username is not configured");
+                var password = configuration.GetValue<string>("RabbitMQ:Password") ?? throw new InvalidOperationException("RabbitMQ Password is not configured");
+                cfg.Host(host, h =>
+                {
+                    h.Username(username);
+                    h.Password(password);
+                });
+                cfg.ConfigureEndpoints(context);
+                cfg.UseMessageRetry(r => r.Interval(3, TimeSpan.FromSeconds(5)));
+                cfg.UseCircuitBreaker(r =>
+                {
+                    r.TrackingPeriod = TimeSpan.FromMinutes(1);
+                    r.TripThreshold = 15;
+                    r.ActiveThreshold = 10;
+                    r.ResetInterval = TimeSpan.FromMinutes(5);
+                });
+            });
+            x.SetKebabCaseEndpointNameFormatter();
+        });
+
         return services;
     }
 }

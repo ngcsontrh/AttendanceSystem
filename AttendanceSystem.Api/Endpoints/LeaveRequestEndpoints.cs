@@ -4,7 +4,6 @@ using AttendanceSystem.Application.Commons.Errors;
 using AttendanceSystem.Application.Features.LeaveRequest.Commands;
 using AttendanceSystem.Application.Features.LeaveRequest.Queries;
 using Microsoft.AspNetCore.Mvc;
-using AttendanceSystem.Application.Commons.Errors;
 using AttendanceSystem.Application.Commons.Models;
 
 namespace AttendanceSystem.Api.Endpoints;
@@ -71,5 +70,65 @@ public class LeaveRequestEndpoints : IEndpointRegister
                 Message = result.Errors.First().Message
             });
         }).RequireAuthorization(AppConstraint.StaffPolicy);
+
+        group.MapPost("/approve", async (
+            [FromBody] ApproveLeaveRequestCommand request,
+            [FromServices] ApproveLeaveRequestCommandHandler handler
+            ) =>
+        {
+            var result = await handler.ExecuteAsync(request);
+            if (result.IsSuccess)
+            {
+                return Results.Ok();
+            }
+            else if (result.HasError<NotFoundError>())
+            {
+                return Results.NotFound(new ErrorData
+                {
+                    Message = result.Errors.First().Message
+                });
+            }
+            else if (result.HasError<BusinessError>())
+            {
+                return Results.BadRequest(new ErrorData
+                {
+                    Message = result.Errors.First().Message
+                });
+            }
+            return Results.InternalServerError(new ErrorData
+            {
+                Message = result.Errors.First().Message
+            });
+        }).RequireAuthorization(AppConstraint.ManagerPolicy);
+
+        group.MapPost("/reject", async (
+            [FromBody] RejectLeaveRequestCommand request,
+            [FromServices] RejectLeaveRequestCommandHandler handler
+            ) =>
+        {
+            var result = await handler.ExecuteAsync(request);
+            if (result.IsSuccess)
+            {
+                return Results.Ok();
+            }
+            else if (result.HasError<NotFoundError>())
+            {
+                return Results.NotFound(new ErrorData
+                {
+                    Message = result.Errors.First().Message
+                });
+            }
+            else if (result.HasError<BusinessError>())
+            {
+                return Results.BadRequest(new ErrorData
+                {
+                    Message = result.Errors.First().Message
+                });
+            }
+            return Results.InternalServerError(new ErrorData
+            {
+                Message = result.Errors.First().Message
+            });
+        }).RequireAuthorization(AppConstraint.ManagerPolicy);
     }
 }

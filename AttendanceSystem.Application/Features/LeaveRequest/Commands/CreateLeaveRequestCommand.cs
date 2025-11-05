@@ -13,8 +13,7 @@ public record CreateLeaveRequestCommand(
     Guid EmployeeId,
     DateTime StartDate,
     DateTime EndDate,
-    string Reason,
-    Guid ApprovedById
+    string Reason
 );
 
 public class CreateLeaveRequestCommandHandler

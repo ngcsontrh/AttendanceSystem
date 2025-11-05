@@ -1,6 +1,7 @@
 ﻿using AttendanceSystem.Application.Commons.Errors;
 using AttendanceSystem.Application.Commons.Services;
 using AttendanceSystem.Application.Features.User.DTOs;
+using AttendanceSystem.Domain.Repositories;
 using FluentResults;
 using Mapster;
 using Microsoft.Extensions.Logging;
@@ -19,14 +20,17 @@ public class GetCurrentUserQueryHandler
 {
     private readonly ILogger<GetCurrentUserQueryHandler> _logger;
     private readonly IIdentityService _identityService;
-    
+    private readonly IEmployeeRepository _employeeRepository;
+
     public GetCurrentUserQueryHandler(
         ILogger<GetCurrentUserQueryHandler> logger,
-        IIdentityService identityService
+        IIdentityService identityService,
+        IEmployeeRepository employeeRepository
         )
     {
         _logger = logger;
         _identityService = identityService;
+        _employeeRepository = employeeRepository;
     }
 
     public async Task<Result<AppUserDTO>> ExecuteAsync(GetCurrentUserQuery query)
@@ -39,7 +43,12 @@ public class GetCurrentUserQueryHandler
                 _logger.LogWarning("Không tìm thấy người dùng với Id: {UserId}", query.UserId);
                 return Result.Fail<AppUserDTO>(new NotFoundError("Người dùng không tồn tại"));
             }
-            return Result.Ok(user.Adapt<AppUserDTO>());
+            var role = await _identityService.GetRoleByUserAsync(user);
+            var employee = await _employeeRepository.GetByUserIdAsync(user.Id);
+            var result = user.Adapt<AppUserDTO>();
+            result.Role = role!;
+            result.EmployeeId = employee != null ? employee.Id : Guid.Empty;
+            return Result.Ok(result);
         }
         catch (Exception ex)
         {

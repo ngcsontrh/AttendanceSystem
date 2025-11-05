@@ -12,6 +12,7 @@ public class AttendanceHistory : EntityBase
     public DateTime AttendanceDate { get; set; }
     public AttendanceType Type { get; set; }
     public AttendanceStatus Status { get; set; }
+    public Guid WorkTimeId { get; set; }
 }
 
 public enum AttendanceType

@@ -11,4 +11,5 @@ public class EmployeeDTO
     public Guid DepartmentId { get; set; }
     public EmployeeStatus Status { get; set; }
     public Guid? ManagerId { get; set; }
+    public Guid? UserId { get; set; }
 }

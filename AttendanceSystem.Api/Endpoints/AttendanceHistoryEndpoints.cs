@@ -66,6 +66,13 @@ public class AttendanceHistoryEndpoints : IEndpointRegister
             {
                 return Results.Created($"/api/attendance-histories/{result.Value.Id}", result.Value);
             }
+            else if (result.HasError<BusinessError>())
+            {
+                return Results.BadRequest(new ErrorData
+                {
+                    Message = result.Errors.First().Message
+                });
+            }
             return Results.InternalServerError(new ErrorData
             {
                 Message = result.Errors.First().Message

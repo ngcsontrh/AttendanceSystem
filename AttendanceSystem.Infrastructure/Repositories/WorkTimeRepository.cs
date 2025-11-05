@@ -11,14 +11,7 @@ public class WorkTimeRepository : RepositoryBase<WorkTime>, IWorkTimeRepository
 {
     public WorkTimeRepository(AppDbContext dbContext) : base(dbContext)
     {
-    }
-
-    public async Task<WorkTime?> GetActiveWorkTimeAsync()
-    {
-        var entity = await DbContext.Set<WorkTime>()
-            .FirstOrDefaultAsync(x => x.IsActive);
-        return entity;
-    }
+    }    
 
     public async Task<(List<WorkTime>, int)> GetPageAsync(ISpecification<WorkTime> specification, int pageIndex, int pageSize)
     {
@@ -30,5 +23,12 @@ public class WorkTimeRepository : RepositoryBase<WorkTime>, IWorkTimeRepository
             .AsNoTracking()
             .ToListAsync();
         return (items, totalCount);
+    }
+
+    public async Task<bool> IsWorkTimeActiveExistingAsync(Guid id)
+    {
+        var result = await DbContext.Set<WorkTime>()
+            .AnyAsync(wt => wt.Id == id && wt.IsActive);
+        return result;
     }
 }

@@ -1,4 +1,4 @@
-using AttendanceSystem.Api;
+﻿using AttendanceSystem.Api;
 using AttendanceSystem.Application;
 using AttendanceSystem.Infrastructure;
 using AttendanceSystem.Migrator;

@@ -16,6 +16,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttendanceSystem.Applicatio
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttendanceSystem.Migrator", "AttendanceSystem.Migrator\AttendanceSystem.Migrator.csproj", "{087839B4-396B-488D-8E13-0C3CD57583A9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AttendanceSystem.Worker.Mail", "AttendanceSystem.Worker.Mail\AttendanceSystem.Worker.Mail.csproj", "{B226BF1F-E71B-6E0D-C07C-923441390B5A}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -50,6 +52,10 @@ Global
 		{087839B4-396B-488D-8E13-0C3CD57583A9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{087839B4-396B-488D-8E13-0C3CD57583A9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{087839B4-396B-488D-8E13-0C3CD57583A9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B226BF1F-E71B-6E0D-C07C-923441390B5A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B226BF1F-E71B-6E0D-C07C-923441390B5A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B226BF1F-E71B-6E0D-C07C-923441390B5A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B226BF1F-E71B-6E0D-C07C-923441390B5A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

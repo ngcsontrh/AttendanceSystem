@@ -13,12 +13,14 @@
   <ItemGroup>
     <PackageReference Include="Aspire.Hosting.AppHost" Version="9.5.0" />
     <PackageReference Include="Aspire.Hosting.Docker" Version="9.5.2-preview.1.25522.3" />
+    <PackageReference Include="Aspire.Hosting.RabbitMQ" Version="9.5.2" />
     <PackageReference Include="Aspire.Hosting.Seq" Version="9.5.2" />
     <PackageReference Include="Aspire.Hosting.SqlServer" Version="9.5.2" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\AttendanceSystem.Api\AttendanceSystem.Api.csproj" />
+    <ProjectReference Include="..\AttendanceSystem.Worker.Mail\AttendanceSystem.Worker.Mail.csproj" />
   </ItemGroup>
 
 </Project>
