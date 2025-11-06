@@ -90,6 +90,17 @@ public class IdentityService : IIdentityService
         {
             throw new InvalidOperationException("User not found");
         }
+        var role = await _roleStore.FindByNameAsync(roleName, default);
+        if (role == null)
+        {
+            await _roleStore.CreateAsync(new AppRole
+            {
+                Id = Guid.CreateVersion7(),
+                Name = roleName,
+                NormalizedName = roleName.ToUpper(),
+                ConcurrencyStamp = Guid.NewGuid().ToString()
+            }, default);
+        }
         var result = await _userManager.AddToRoleAsync(user, roleName);
         if (!result.Succeeded)
         {
